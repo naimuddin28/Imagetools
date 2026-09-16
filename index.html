@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Free Image Tools – Crop, Resize, Compress & Convert Images</title>
+    <meta name="description" content="Free online image tools to crop, resize, compress, convert, rotate and flip images directly in your browser. Fast, private and easy to use.">
+    <meta name="keywords" content="image tools, image resizer, image compressor, image converter, image cropper, resize image, compress image, convert image, jpg converter, png converter, webp converter, online image editor, free image tools">
+    
+    <!-- Open Graph Metadata -->
+    <meta property="og:title" content="ImageTools - Free Image Editing">
+    <meta property="og:description" content="Crop, resize, compress, convert, rotate and flip images directly in your browser. Fast, private, free.">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://imagetools.example.com">
+    
+    <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+    <link rel="stylesheet" href="style.css">
+    
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container header-container">
+            <a href="#" class="logo">
+                <i data-lucide="image" class="logo-icon"></i>
+                <span>ImageTools</span>
+            </a>
+            
+            <button class="mobile-menu-btn" aria-label="Toggle Menu">
+                <i data-lucide="menu"></i>
+            </button>
+            
+            <nav class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#editor-section">Tools</a>
+                <a href="#about">About</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Home / Upload Section -->
+        <section id="home" class="hero-section">
+            <div class="container hero-container">
+                <h1 class="hero-title">Edit Images Easily</h1>
+                <p class="hero-subtitle">Crop, resize, compress, convert, rotate and flip your images directly in your browser.</p>
+                <div class="privacy-badge">
+                    <i data-lucide="lock" class="badge-icon"></i>
+                    <span>Your images never leave your device.</span>
+                </div>
+                
+                <div class="upload-area" id="uploadArea">
+                    <input type="file" id="fileInput" accept="image/jpeg, image/png, image/webp" hidden>
+                    <div class="upload-content">
+                        <i data-lucide="upload-cloud" class="upload-icon"></i>
+                        <h3>Upload Your Image</h3>
+                        <p>Drag & Drop your image here</p>
+                        <span class="upload-or">or</span>
+                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">Browse Image</button>
+                        <p class="upload-formats">Supported formats: JPG • JPEG • PNG • WebP</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Editor Section -->
+        <section id="editor-section" class="editor-section hidden">
+            <div class="editor-container">
+                <div class="editor-header">
+                    <button class="btn btn-secondary btn-sm" id="btnBackToUpload">
+                        <i data-lucide="arrow-left"></i> Upload New Image
+                    </button>
+                    <div class="editor-actions">
+                        <button class="btn btn-icon" id="btnUndo" disabled title="Undo (Ctrl+Z)"><i data-lucide="undo-2"></i></button>
+                        <button class="btn btn-icon" id="btnRedo" disabled title="Redo (Ctrl+Y)"><i data-lucide="redo-2"></i></button>
+                        <button class="btn btn-danger btn-sm" id="btnReset"><i data-lucide="refresh-cw"></i> Reset</button>
+                        <button class="btn btn-primary btn-sm" id="btnDownloadHeader"><i data-lucide="download"></i> Download</button>
+                    </div>
+                </div>
+
+                <div class="editor-layout">
+                    <!-- Sidebar -->
+                    <aside class="editor-sidebar">
+                        <div class="tools-list">
+                            <button class="tool-btn active" data-tool="crop">
+                                <i data-lucide="crop"></i> Crop
+                            </button>
+                            <button class="tool-btn" data-tool="resize">
+                                <i data-lucide="scaling"></i> Resize
+                            </button>
+                            <button class="tool-btn" data-tool="compress">
+                                <i data-lucide="minimize"></i> Compress
+                            </button>
+                            <button class="tool-btn" data-tool="convert">
+                                <i data-lucide="file-type-2"></i> Convert
+                            </button>
+                            <button class="tool-btn" data-tool="rotate">
+                                <i data-lucide="rotate-cw"></i> Rotate
+                            </button>
+                            <button class="tool-btn" data-tool="flip">
+                                <i data-lucide="flip-horizontal"></i> Flip
+                            </button>
+                        </div>
+                    </aside>
+
+                    <!-- Tool Options Panel -->
+                    <div class="tool-options-panel">
+                        <!-- Crop Options -->
+                        <div class="tool-options active" id="options-crop">
+                            <h3>Crop Image</h3>
+                            <div class="option-group">
+                                <label>Aspect Ratio</label>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline btn-sm ratio-btn active" data-ratio="free">Free</button>
+                                    <button class="btn btn-outline btn-sm ratio-btn" data-ratio="1">1:1</button>
+                                    <button class="btn btn-outline btn-sm ratio-btn" data-ratio="1.3333">4:3</button>
+                                    <button class="btn btn-outline btn-sm ratio-btn" data-ratio="1.7777">16:9</button>
+                                </div>
+                            </div>
+                            <div class="option-actions">
+                                <button class="btn btn-secondary btn-sm" id="btnCancelCrop">Cancel</button>
+                                <button class="btn btn-primary btn-sm" id="btnApplyCrop">Apply Crop</button>
+                            </div>
+                        </div>
+
+                        <!-- Resize Options -->
+                        <div class="tool-options" id="options-resize">
+                            <h3>Resize Image</h3>
+                            <div class="option-group dimensions-group">
+                                <div class="input-wrap">
+                                    <label for="resizeWidth">Width (px)</label>
+                                    <input type="number" id="resizeWidth" min="1" step="1">
+                                </div>
+                                <div class="link-icon">
+                                    <i data-lucide="link"></i>
+                                </div>
+                                <div class="input-wrap">
+                                    <label for="resizeHeight">Height (px)</label>
+                                    <input type="number" id="resizeHeight" min="1" step="1">
+                                </div>
+                            </div>
+                            <div class="checkbox-wrap">
+                                <input type="checkbox" id="lockAspectRatio" checked>
+                                <label for="lockAspectRatio">Lock Aspect Ratio</label>
+                            </div>
+                            <div class="option-group">
+                                <label>Presets</label>
+                                <div class="btn-group">
+                                    <button class="btn btn-outline btn-sm preset-btn" data-scale="0.25">25%</button>
+                                    <button class="btn btn-outline btn-sm preset-btn" data-scale="0.5">50%</button>
+                                    <button class="btn btn-outline btn-sm preset-btn" data-scale="0.75">75%</button>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary w-100" id="btnApplyResize">Apply Resize</button>
+                        </div>
+
+                        <!-- Compress Options -->
+                        <div class="tool-options" id="options-compress">
+                            <h3>Compress Image</h3>
+                            <div class="option-group">
+                                <label for="compressFormat">Format</label>
+                                <select id="compressFormat" class="form-select">
+                                    <option value="image/jpeg">JPG</option>
+                                    <option value="image/webp">WebP</option>
+                                    <option value="image/png">PNG</option>
+                                </select>
+                            </div>
+                            <div class="option-group" id="qualityGroup">
+                                <label for="compressQuality" class="flex-between">
+                                    <span>Quality</span>
+                                    <span id="qualityValue">80%</span>
+                                </label>
+                                <input type="range" id="compressQuality" min="0.1" max="1" step="0.01" value="0.8">
+                            </div>
+                            <div class="compression-info">
+                                <div class="info-row">
+                                    <span>Original Size:</span>
+                                    <span id="originalSizeDisplay">-</span>
+                                </div>
+                                <div class="info-row">
+                                    <span>Estimated Size:</span>
+                                    <span id="estimatedSizeDisplay" class="highlight">-</span>
+                                </div>
+                                <p class="note png-note hidden">PNG compression is lossless; the slider may have limited effect.</p>
+                            </div>
+                            <button class="btn btn-primary w-100" id="btnApplyCompress">Apply & Preview</button>
+                        </div>
+
+                        <!-- Convert Options -->
+                        <div class="tool-options" id="options-convert">
+                            <h3>Convert Image</h3>
+                            <div class="option-group">
+                                <label>Convert to</label>
+                                <div class="format-buttons">
+                                    <button class="btn btn-outline convert-format-btn" data-format="image/jpeg">JPG</button>
+                                    <button class="btn btn-outline convert-format-btn" data-format="image/png">PNG</button>
+                                    <button class="btn btn-outline convert-format-btn" data-format="image/webp">WebP</button>
+                                </div>
+                            </div>
+                            <p class="note" id="transparencyNote">JPG does not support transparency. Transparent areas will become white.</p>
+                            <button class="btn btn-primary w-100 mt-3" id="btnApplyConvert">Convert Image</button>
+                        </div>
+
+                        <!-- Rotate Options -->
+                        <div class="tool-options" id="options-rotate">
+                            <h3>Rotate Image</h3>
+                            <div class="action-grid">
+                                <button class="btn btn-secondary action-btn" id="btnRotateLeft">
+                                    <i data-lucide="rotate-ccw"></i> Rotate Left -90°
+                                </button>
+                                <button class="btn btn-secondary action-btn" id="btnRotateRight">
+                                    <i data-lucide="rotate-cw"></i> Rotate Right +90°
+                                </button>
+                                <button class="btn btn-secondary action-btn" id="btnRotate180">
+                                    <i data-lucide="refresh-cw"></i> Rotate 180°
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Flip Options -->
+                        <div class="tool-options" id="options-flip">
+                            <h3>Flip Image</h3>
+                            <div class="action-grid">
+                                <button class="btn btn-secondary action-btn" id="btnFlipH">
+                                    <i data-lucide="flip-horizontal"></i> Flip Horizontal
+                                </button>
+                                <button class="btn btn-secondary action-btn" id="btnFlipV">
+                                    <i data-lucide="flip-vertical"></i> Flip Vertical
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Download Section (always at bottom of panel) -->
+                        <div class="download-section mt-auto">
+                            <hr class="panel-divider">
+                            <div class="info-row text-sm mb-2">
+                                <span>Current Size:</span>
+                                <span id="currentDimDisplay">-</span>
+                            </div>
+                            <div class="info-row text-sm mb-3">
+                                <span>Est. File Size:</span>
+                                <span id="currentSizeDisplay">-</span>
+                            </div>
+                            <button class="btn btn-primary btn-lg w-100" id="btnDownloadMain">
+                                <i data-lucide="download"></i> Download Image
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Preview Area -->
+                    <div class="preview-area">
+                        <div class="preview-toolbar">
+                            <div class="zoom-controls">
+                                <button class="btn btn-icon btn-sm" id="btnZoomOut" title="Zoom Out"><i data-lucide="zoom-out"></i></button>
+                                <span id="zoomValue">100%</span>
+                                <button class="btn btn-icon btn-sm" id="btnZoomIn" title="Zoom In"><i data-lucide="zoom-in"></i></button>
+                                <button class="btn btn-secondary btn-sm" id="btnFitScreen">Fit</button>
+                                <button class="btn btn-secondary btn-sm" id="btnResetZoom">1:1</button>
+                            </div>
+                            <div class="compare-toggle">
+                                <label class="switch">
+                                    <input type="checkbox" id="compareToggle">
+                                    <span class="slider round"></span>
+                                </label>
+                                <span>Compare Original</span>
+                            </div>
+                        </div>
+                        
+                        <div class="canvas-container" id="canvasContainer">
+                            <canvas id="mainCanvas"></canvas>
+                            <!-- Crop Overlay UI -->
+                            <div id="cropOverlay" class="crop-overlay hidden">
+                                <div class="crop-box" id="cropBox">
+                                    <div class="crop-handle nw" data-dir="nw"></div>
+                                    <div class="crop-handle n" data-dir="n"></div>
+                                    <div class="crop-handle ne" data-dir="ne"></div>
+                                    <div class="crop-handle w" data-dir="w"></div>
+                                    <div class="crop-handle e" data-dir="e"></div>
+                                    <div class="crop-handle sw" data-dir="sw"></div>
+                                    <div class="crop-handle s" data-dir="s"></div>
+                                    <div class="crop-handle se" data-dir="se"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Landing Page Content -->
+        <section id="about" class="features-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Everything You Need for Simple Image Editing</h2>
+                    <p>Powerful tools designed for speed, privacy, and ease of use.</p>
+                </div>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="crop"></i></div>
+                        <h3>Image Cropper</h3>
+                        <p>Crop your images to any size or choose a popular aspect ratio.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="scaling"></i></div>
+                        <h3>Image Resizer</h3>
+                        <p>Resize images while maintaining their original proportions.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="minimize"></i></div>
+                        <h3>Image Compressor</h3>
+                        <p>Reduce image file size while keeping quality under your control.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="file-type-2"></i></div>
+                        <h3>Image Converter</h3>
+                        <p>Convert images between JPG, PNG and WebP.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="rotate-cw"></i></div>
+                        <h3>Rotate & Flip</h3>
+                        <p>Quickly rotate or flip your images in seconds.</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="feature-icon"><i data-lucide="shield-check"></i></div>
+                        <h3>Private & Secure</h3>
+                        <p>Images are processed locally in your browser.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- How It Works -->
+        <section class="how-it-works-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>How It Works</h2>
+                </div>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">01</div>
+                        <h3>Upload</h3>
+                        <p>Choose or drag your image into the editor.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">02</div>
+                        <h3>Edit</h3>
+                        <p>Use the tools to crop, resize, compress or convert.</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">03</div>
+                        <h3>Download</h3>
+                        <p>Download your edited image instantly.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="faq-section">
+            <div class="container">
+                <div class="section-header">
+                    <h2>Frequently Asked Questions</h2>
+                </div>
+                <div class="faq-container">
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>Are my images uploaded to a server?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>No. Image processing happens directly in your browser. Nothing is uploaded to our servers.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>Is ImageTools free?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes. The core image editing tools are free to use.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>What image formats are supported?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>JPG, JPEG, PNG and WebP are supported.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>Can I use it on mobile?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>Yes. The interface is fully responsive and works on mobile devices.</p>
+                        </div>
+                    </div>
+                    <div class="faq-item">
+                        <div class="faq-question">
+                            <h4>Do I need to install software?</h4>
+                            <i data-lucide="chevron-down"></i>
+                        </div>
+                        <div class="faq-answer">
+                            <p>No. Everything works directly in your web browser without any installation.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-top">
+                <div class="footer-brand">
+                    <a href="#" class="logo">
+                        <i data-lucide="image" class="logo-icon"></i>
+                        <span>ImageTools</span>
+                    </a>
+                    <p>Simple, private and browser-based image utilities.</p>
+                </div>
+                <div class="footer-links">
+                    <a href="#home">Home</a>
+                    <a href="#editor-section">Tools</a>
+                    <a href="#about">About</a>
+                    <a href="#">Privacy</a>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2026 ImageTools. All rights reserved.</p>
+                <p>Developed by <a href="https://www.linkedin.com/in/mdnaimuddin28/" target="_blank" rel="noopener noreferrer">Md Naim Uddin</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Toast Notifications Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <script src="script.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
