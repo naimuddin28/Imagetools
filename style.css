@@ -754,6 +754,10 @@ canvas {
     transition: var(--transition);
 }
 
+.feature-card[data-target-tool] {
+    cursor: pointer;
+}
+
 .feature-card:hover {
     transform: translateY(-5px);
     border-color: var(--border-hover);

@@ -17,6 +17,9 @@ const AppState = {
     historyIndex: -1,
     maxHistory: 10,
     
+    // Feature Card Click
+    pendingTool: null,
+    
     // Zoom state
     zoomLevel: 1, // 1 = 100%
     
@@ -114,9 +117,35 @@ function init() {
     setupActionEvents();
     setupToolEvents();
     setupFAQEvents();
+    setupFeatureCards();
     
     // Create an offscreen canvas for processing
     AppState.currentCanvas = document.createElement('canvas');
+}
+
+function setupFeatureCards() {
+    document.querySelectorAll('.feature-card[data-target-tool]').forEach(card => {
+        card.addEventListener('click', () => {
+            const tool = card.getAttribute('data-target-tool');
+            AppState.pendingTool = tool;
+            
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            
+            // Prompt upload after short delay
+            setTimeout(() => {
+                DOM.fileInput.click();
+            }, 500);
+        });
+        
+        // Keyboard accessibility
+        card.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                card.click();
+            }
+        });
+    });
 }
 
 // --- Upload Handling ---
@@ -197,6 +226,12 @@ function handleFile(file) {
             openEditor();
             updatePreview();
             showToast('Image loaded successfully.', 'success');
+            
+            if (AppState.pendingTool) {
+                const btn = document.querySelector(`.tool-btn[data-tool="${AppState.pendingTool}"]`);
+                if (btn) btn.click();
+                AppState.pendingTool = null;
+            }
         };
         img.onerror = () => {
             showToast('Error loading image. File might be corrupted.', 'error');
